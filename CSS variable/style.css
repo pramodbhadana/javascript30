@@ -1,0 +1,21 @@
+:root {
+    max-width: 100vh;
+    max-height: 100vh;
+    --baseColor : #d8d8d8;
+    --spacing: 10px;
+    --blur: 10px;
+}
+
+img {
+    padding: var(--spacing);
+    background: var(--baseColor);
+    filter: blur(var(--blur));
+}
+
+input {
+    margin: 40px;
+}
+
+.highlight {
+    color: var(--baseColor);
+}
