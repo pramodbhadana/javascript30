@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+    <style>
+        html,body {
+            box-sizing: border-box;
+            height: 90vh;
+            width: 98vw;
+        }
+        .controls {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+<div class="controls">
+    <div class="control">
+        <label for="Stroke">Stroke width :</label>
+        <input id="Stroke" type="range" name="strokeWidth" min="1" max="100" value="1">
+    </div>
+
+    <div class="control">
+        <label for="blendMode">Blend Mode :</label>
+        <select id="blendMode" name="blendMode">
+            </select>
+    </div>
+
+    <div class="control">
+        <label for="strokeColor">Stroke Color : </label>
+        <input id="strokeColor" type="color" name="strokeColor" value="#D8D8D8">
+    </div>
+
+    <div>
+        <button id="clearCanvasButton">Clear</button>
+    </div>
+</div>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+    let canvas = document.querySelector('#draw');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let controls = document.querySelectorAll('.controls select, .controls input');
+    let context = canvas.getContext('2d');
+    let clearCanvasButton = document.querySelector('#clearCanvasButton');
+    const blendModes = ['normal', 'multiply', 'screen', 'overlay', 
+        'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 
+        'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 
+        'color', 'luminosity',];
+    let blendModeSelect = document.querySelector('#blendMode');
+    blendModes.forEach((mode, index) => 
+        { blendModeSelect.options[blendModeSelect.options.length]
+            = new Option(mode, index);
+    });
+
+    //canvas settings 
+    let strokeWidth;
+    let strokeColor;
+    let blendMode;
+    /// initial these values from the default state of input controls
+    controls.forEach(control => updateLocalConfiguration.call(control));
+
+    let magicMode = false;
+    let direction = true;
+    let hue = 1;
+
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+
+    let lastX = 0;
+    let lastY = 0;
+    let isDrawing = false;
+
+    
+function draw(e) {
+    if(!isDrawing)
+        return;
+    
+    if(magicMode) {
+        hue++;
+    if(hue >= 360)
+        hue++;
+    if(direction)
+        strokeWidth++;
+    else 
+        strokeWidth--;
+    if(strokeWidth >= 200 || strokeWidth <= 0)
+        direction = !direction;
+    strokeColor = `hsl(${hue},100%,50%)`;
+    
+    // controls.forEach( control => {
+    //     if(control.name == 'blendMode') {
+    //         blendMode = control.options[Math.floor(Math.random() * control.length)].text;
+    //     }
+    // });
+    }
+
+
+    context.beginPath();
+    context.lineWidth = strokeWidth;
+    context.strokeStyle = strokeColor;
+    context.globalCompositeOperation = blendMode;
+
+    context.moveTo(lastX, lastY);
+    context.lineTo(e.offsetX, e.offsetY);
+    context.stroke();
+
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    
+}
+
+function updateLocalConfiguration() {
+    //console.log(this);
+    switch(this.name) {
+        case 'strokeWidth':
+            strokeWidth = this.value;
+            break;
+        case 'strokeColor':
+            strokeColor = this.value;
+            break;
+        case 'blendMode':
+            blendMode =  this.options[this.selectedIndex].text;
+            break;
+    }
+    console.log(strokeWidth, strokeColor, blendMode);
+}
+
+function handleInputChange() {
+    updateLocalConfiguration.call(this);
+}
+
+function clearCanvas() {
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);}
+
+canvas.addEventListener('mousedown', (e) => { 
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+});
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
+
+clearCanvasButton.addEventListener('click', clearCanvas);
+
+controls.forEach(input => input.addEventListener('change',handleInputChange));
+//controls.forEach(input => input.addEventListener('mousemove',handleInputChange));
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
