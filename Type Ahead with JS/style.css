@@ -1,0 +1,44 @@
+html {
+    box-sizing: border-box;
+    background: lightcyan;
+    font-family: 'Bai Jamjuree', sans-serif;
+}
+
+.search-form {
+    width: 500px;
+    margin: 30px auto;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+}
+
+
+input.search {
+    text-align: center;
+    border-radius: 4px;
+    font-size: 30px;
+}
+
+.suggestions li {
+    background: white;
+    padding: 20px;
+    margin: 0px;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    text-transform: capitalize;
+    border-bottom: 1px solid #D8D8D8;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+
+span.population {
+    font-size: 15px;
+  }
+  
+  .hl {
+    background: lightcyan;
+    font-weight: bold;
+  }
