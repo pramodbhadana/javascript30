@@ -17,11 +17,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .control {
+            width: 200px;
+            height: 100px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
     </style>
@@ -44,6 +47,13 @@
 
     <div>
         <button id="clearCanvasButton">Clear</button>
+    </div>
+
+    <div>
+        <label class="magicMode">
+            Magic Mode
+            <input type="checkbox">
+          </label>
     </div>
 </div>
 <canvas id="draw" width="800" height="800"></canvas>
@@ -99,11 +109,7 @@ function draw(e) {
         direction = !direction;
     strokeColor = `hsl(${hue},100%,50%)`;
     
-    // controls.forEach( control => {
-    //     if(control.name == 'blendMode') {
-    //         blendMode = control.options[Math.floor(Math.random() * control.length)].text;
-    //     }
-    // });
+    //blendMode = blendModes[Math.floor(Math.random() * blendModes.length)];
     }
 
 
@@ -136,7 +142,28 @@ function updateLocalConfiguration() {
     console.log(strokeWidth, strokeColor, blendMode);
 }
 
+function updateState(mode) {
+    console.log(mode);
+    if(mode) {
+        controls.forEach(control => {
+            if (control.type != 'checkbox') control.disabled = true;
+        });
+    } else {
+        //restore state
+        controls.forEach(control => {
+            control.disabled = false;
+            updateLocalConfiguration.call(control)
+        });
+    }
+}
+
 function handleInputChange() {
+    console.dir(this);
+    if(this.type == 'checkbox') {
+        magicMode = this.checked;
+            updateState(magicMode);
+        return ;
+    }
     updateLocalConfiguration.call(this);
 }
 
