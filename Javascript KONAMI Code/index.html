@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+</head>
+<body>
+<script>
+    const secretCode = 'elon';
+    const entered = [];
+    window.addEventListener('keyup',(e) => {
+        entered.push(e.key);
+        entered.splice(-secretCode.length - 1, entered.length - secretCode.length);
+        console.log(entered);
+        if(entered.join('').includes(secretCode)) {
+            console.log('Lets go to MARS !!!!');
+        }
+    });
+</script>
+</body>
+</html>
