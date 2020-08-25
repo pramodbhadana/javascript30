@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 >Move cursor around</h1>
+  </div>
+
+  <style>
+  html {
+    color: black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: teal;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 4px grey;
+    font-size: 80px;
+  }
+  </style>
+
+<script>
+  const hero = document.querySelector('.hero');
+  const text = document.querySelector('h1');
+
+  let walk = 100;
+
+  function showShadow(e) {
+    const {offsetWidth : width, offsetHeight : height} = hero;
+    let {offsetX : x, offsetY : y} = e;
+
+    //if event is not triggered on the hero , but on h1
+    if(this !== e.target) {
+      x += e.target.offsetLeft;
+      y += e.target.offsetTop;
+    }
+
+    const xWalk = Math.round((x/width * walk) - walk/2);
+    const yWalk = Math.round((y/height * walk) - walk/2);
+
+    console.log(xWalk,yWalk);
+
+    text.style.textShadow = `${xWalk}px ${yWalk}px 4px grey`;
+  }
+
+  hero.addEventListener('mousemove', showShadow);
+
+  /* 
+  Learnings: 
+
+  1. offsetX and offsetY gives the absolute value of the cursor with respect to 
+  the parent element, so in case of nested elements be aware of this. Might have 
+  to do some math to move around this.
+
+  2. 
+  */
+</script>
+</body>
+</html>
