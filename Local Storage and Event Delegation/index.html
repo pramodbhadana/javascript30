@@ -23,11 +23,17 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    <div class="buttons">
+      <button class="button" data-action="clear">Clear All</button>
+      <button class="button" data-action="check">Check All</button>
+      <button class="button" data-action="remove">Remove All</button>
+    </div>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
+  const buttons = document.querySelector('.buttons');
   const items = JSON.parse(localStorage.getItem('items')) || [];
 
   function addItem(e) {
@@ -66,8 +72,35 @@
 
   }
 
+  function takeAction(e) {
+    if(!e.target.matches('button')) return;
+
+    switch(e.target.dataset.action) {
+      case('clear') :
+        items.forEach(item => {
+          item.done = false;
+        });
+        populateItems(items,itemsList);
+        localStorage.setItem('items',JSON.stringify(items));
+        break;
+      case('check') :
+        items.forEach(item => {
+          item.done = true;
+        });
+        populateItems(items,itemsList);
+        localStorage.setItem('items',JSON.stringify(items));
+        break;
+      case('remove') :
+        items.splice(0,items.length);
+        populateItems(items,itemsList);
+        localStorage.setItem('items',JSON.stringify(items));
+        break;
+    }
+  }
+
   addItems.addEventListener('submit', addItem);
   itemsList.addEventListener('click', toggleDone);
+  buttons.addEventListener('click', takeAction);
 
   populateItems(items, itemsList);
   /* Learnings : 
