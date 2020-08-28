@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Understanding JavaScript's Capture</title>
+  </head>
+  <body class="bod">
+    <div class="one">
+      <div class="two">
+        <div class="three"></div>
+      </div>
+    </div>
+
+    <style>
+      html {
+        box-sizing: border-box;
+      }
+
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
+
+      div {
+        width: 100%;
+        padding: 100px;
+      }
+
+      .one {
+        background: thistle;
+      }
+
+      .two {
+        background: mistyrose;
+      }
+
+      .three {
+        background: coral;
+      }
+
+      button {
+        width: 100px;
+        height: 30px;
+        margin-top: 20px;
+      }
+    </style>
+
+    <button>Click Me !!</button>
+    <script>
+      const divs = document.querySelectorAll('div');
+      const button = document.querySelector('button');
+
+      function logText(e) {
+        console.log(this.classList.value);
+        //e.stopPropagation();
+      }
+
+      divs.forEach((div) =>
+        div.addEventListener('click', logText, {
+          capture: false,
+          once: true,
+        })
+      );
+
+      button.addEventListener(
+        'click',
+        () => {
+          console.log('Click!!!');
+        },
+        {
+          once: true,
+        }
+      );
+
+      /*
+      Learning : 
+
+      1. Whenever you set an event listener on an element, it is triggered on 
+      all its parent elements as well. 
+      2. The order of trigerring i.e from element to its parents or from parents 
+      to the element, depends on the third object passed to the addEventListener 
+      method. If the argument capture is true, the events are fired from up to buttom 
+      fashion.
+      3.Event.stopPropagation will stop the triger chain.
+      4. The second argement of the object 'once' will make the event triger once 
+      and then it does not get trigerred again.
+    
+
+      */
+    </script>
+  </body>
+</html>
