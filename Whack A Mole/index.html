@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Whack A Mole!</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Whack-a-mole! <span class="score">0</span></h1>
+    
+    <div class="controls">
+    <button class="button-start-game" onClick="startGame()">Start Game!</button>
+    </div>
+    <div class="game">
+      <div class="hole hole1">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole2">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole3">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole4">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole5">
+        <div class="mole"></div>
+      </div>
+      <div class="hole hole6">
+        <div class="mole"></div>
+      </div>
+    </div>
+
+    <script>
+      const RANDOM_TIME_MIN = 20;
+      const RANDOM_TIME_MAX = 1000;
+      const GAME_DURATION = 10000;
+
+      const holes = document.querySelectorAll('.hole');
+      const scoreBoard = document.querySelector('.score');
+      const moles = document.querySelectorAll('.mole');
+
+      let lastHole;
+      let endGame = false;
+      let score = 0;
+
+      function randomHole(holes) {
+        let hole = holes[Math.floor(Math.random() * holes.length)];
+        if(hole === lastHole) {
+          return randomHole(holes);
+        }
+        lastHole = hole;
+        return hole;
+      }
+
+      function randomTime(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+      }
+
+      function peep() {
+        let hole = randomHole(holes);
+        let time = randomTime(RANDOM_TIME_MIN, RANDOM_TIME_MAX);
+
+        hole.classList.add('up');
+        setTimeout(() => {
+          hole.classList.remove('up');
+          if (!endGame) peep();
+        }, time);
+      }
+
+      function startGame() {
+        score = 0;
+        endGame = false;
+        peep();
+        setTimeout(() => (endGame = true), GAME_DURATION);
+      }
+
+      function bonk(e) {
+        if(!e.isTrusted) return ; // cheating !!
+        score++;
+        scoreBoard.textContent = score;
+        this.parentNode.classList.remove('up');
+      }
+
+      moles.forEach(mole => mole.addEventListener('click', bonk));
+
+      /*
+      Learning : 
+
+      1. How to use Math.random function.
+      2. How to piece everything together to make a game.
+      3. e.isTrusted to identify if the event is created by user  or simulated using 
+      Javascript.
+      */
+    </script>
+  </body>
+</html>
